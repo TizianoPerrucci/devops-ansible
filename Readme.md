@@ -1,5 +1,5 @@
-
-== What's about
+What's about:
+=============
 
 Here you can find some examples of Ansible playbooks.
 
@@ -9,4 +9,4 @@ Here you can find some examples of Ansible playbooks.
 
 
 
-Tested with Ansible 1.3.4
+(*) Tested with Ansible 1.3.4
