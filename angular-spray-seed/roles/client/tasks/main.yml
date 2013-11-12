@@ -1,0 +1,80 @@
+---
+  - include: nodejs.yml
+
+  - name: Client | Create client dir
+    file: dest=$client_install_dir owner=$ansible_ssh_user group=$ansible_ssh_user mode=755 state=directory
+    sudo: yes
+    tags: client
+
+  - name: Client | Checkout
+    git: repo=$client_repo dest=$client_install_dir version=master
+    register: checkout
+    tags:
+      - update
+      - client
+
+  - name:  Client | Check if grunt is installed
+    command: test -x /usr/bin/grunt
+    ignore_errors: yes
+    register: grunt_present
+    tags: client
+
+  - name:  Client | Install grunt-cli
+    command: npm -g install grunt-cli
+    when: grunt_present|failed
+    sudo: yes
+    tags: client
+
+  - name:  Client | Install karma
+    command: npm -g install karma
+    when: grunt_present|failed
+    sudo: yes
+    tags: client
+
+  - name:  Client | Install node modules
+    command: chdir=$client_install_dir npm install
+    tags:
+      - client
+      - update
+
+  - name:  Client | Install fontforge
+    apt: pkg=fontforge state=present
+    sudo: yes
+    tags: client
+
+  - include: ruby.yml
+
+  # we use bash -l because we need to get ruby and gems in PATH
+  - name:  Client | Install bundler
+    shell: /bin/bash -lc 'gem install bundler'
+    tags: client
+
+  - name:  Client | Install ruby modules
+    shell: chdir=$client_install_dir /bin/bash -lc 'bundle install'
+    tags: client
+
+  - name:  Client | Compile styles
+    shell: chdir=$client_install_dir /bin/bash -lc 'grunt'
+    tags:
+      - client
+      - update
+
+  - include: nginx.yml
+
+  - name:  Client | Removing Nginx default site configuration
+    command: rm -f /etc/nginx/sites-enabled/default
+    sudo: yes
+    tags: client
+
+  - name:  Client | Copy Nginx configuration
+    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/seed.com
+    sudo: yes
+    tags:
+      - client
+      - update
+
+  - name:  Client | Enable website
+    command: ln -fs /etc/nginx/sites-available/seed.com /etc/nginx/sites-enabled/seed.com
+    sudo: yes
+    tags: client
+    notify: Client | Restart nginx

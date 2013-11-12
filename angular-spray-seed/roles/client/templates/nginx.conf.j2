@@ -1,0 +1,22 @@
+server {
+    listen 80;
+
+    # Firefox allows to request fonts from the same domain but requires access control headers when requesting them across different domains
+    add_header Access-Control-Allow-Origin *;
+
+    charset utf-8;
+
+    set $host_path "{{client_install_dir}}";
+    root $host_path/source;
+
+    proxy_intercept_errors on;
+
+    expires 1M;
+
+    # opt-in to the future
+    add_header "X-UA-Compatible" "IE=Edge,chrome=1";
+
+    location / {
+        index index.html;
+    }
+}

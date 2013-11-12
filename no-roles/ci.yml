@@ -1,0 +1,8 @@
+---
+- hosts: example2
+  user: vagrant
+
+  tasks:
+  - include: tasks/common.yml
+
+  - include: tasks/jenkins.yml

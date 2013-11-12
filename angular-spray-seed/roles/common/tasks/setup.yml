@@ -1,0 +1,11 @@
+---
+  - name: Common setup | Install common apt packages
+    action: apt pkg=$item update-cache=yes state=present
+    with_items:
+      - python-software-properties
+      - reptyr
+      - htop
+      - curl
+      - build-essential
+    sudo: yes
+    tags: common

@@ -1,0 +1,7 @@
+---
+- hosts: webapp_server
+  user: vagrant
+  roles:
+     - role: common
+     - role: client
+     - role: rest

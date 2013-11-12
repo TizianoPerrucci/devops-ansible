@@ -1,0 +1,10 @@
+description "Medistatics API"
+author "StarterSquad"
+
+env HOME={{server_install_dir}}
+env JAVA_OPTS="-Xmx1024M -Dfile.encoding=utf8"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+exec start-stop-daemon --chdir ${HOME} --start --exec ${HOME}/target/start

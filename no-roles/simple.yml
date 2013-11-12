@@ -1,0 +1,7 @@
+---
+- hosts: example1
+  user: vagrant
+
+  tasks:
+  - name: uname
+    command: uname -a
