@@ -1,0 +1,3 @@
+---
+server_repo: https://github.com/StarterSquad/spray-twirl-seed.git
+server_install_dir: /opt/seeds/server

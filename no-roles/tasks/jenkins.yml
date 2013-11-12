@@ -19,6 +19,10 @@
     when: jenkins_present|failed
     sudo: yes
 
+  - name: Jenkins | Create run dir
+    command: mkdir /var/run/jenkins
+    sudo: yes
+
   - name: Jenkins | Install
     apt: update-cache=yes force=yes state=present pkg=jenkins
     tags: jenkins

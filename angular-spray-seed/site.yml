@@ -1,5 +1,5 @@
 ---
-- hosts: webapp_server
+- hosts: seed
   user: vagrant
   roles:
      - role: common

@@ -9,9 +9,7 @@
   - name: Client | Checkout
     git: repo=$client_repo dest=$client_install_dir version=master
     register: checkout
-    tags:
-      - update
-      - client
+    tags: client
 
   - name:  Client | Check if grunt is installed
     command: test -x /usr/bin/grunt
@@ -33,13 +31,7 @@
 
   - name:  Client | Install node modules
     command: chdir=$client_install_dir npm install
-    tags:
-      - client
-      - update
-
-  - name:  Client | Install fontforge
-    apt: pkg=fontforge state=present
-    sudo: yes
+    when: checkout.changed
     tags: client
 
   - include: ruby.yml
@@ -51,13 +43,13 @@
 
   - name:  Client | Install ruby modules
     shell: chdir=$client_install_dir /bin/bash -lc 'bundle install'
+    when: checkout.changed
     tags: client
 
   - name:  Client | Compile styles
     shell: chdir=$client_install_dir /bin/bash -lc 'grunt'
-    tags:
-      - client
-      - update
+    when: checkout.changed
+    tags: client
 
   - include: nginx.yml
 
@@ -69,9 +61,7 @@
   - name:  Client | Copy Nginx configuration
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/seed.com
     sudo: yes
-    tags:
-      - client
-      - update
+    tags: client
 
   - name:  Client | Enable website
     command: ln -fs /etc/nginx/sites-available/seed.com /etc/nginx/sites-enabled/seed.com
