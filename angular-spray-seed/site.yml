@@ -4,4 +4,4 @@
   roles:
      - role: common
      - role: client
-     - role: rest
+     - role: api

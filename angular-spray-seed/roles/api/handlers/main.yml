@@ -1,4 +1,4 @@
 ---
-  - name: Server | Restart spray
+  - name: API | Restart spray
     action: service name=rest-api state=restarted
     sudo: yes
